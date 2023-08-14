@@ -21,7 +21,9 @@ public class labTestActivity extends AppCompatActivity {
                     {"Package 2 : Blood Glucose Fasting","", "", "", "299"},
                     {"Package 3 : COVID-19 Antibody","", "", "", "700"},
                     {"Package 4 : Thyroid Checkup","", "", "", "500"},
-                    {"Package 5 : Immunity Check","", "", "", "700"}
+                    {"Package 5 : Immunity Check","", "", "", "700"},
+                    //{"Package 6 : Immunity Check","", "", "", "700"}
+
 
             };
 
@@ -42,7 +44,14 @@ public class labTestActivity extends AppCompatActivity {
                     "Iron Studies\n"+
                     "Kidney Function Test\n"+
                     "Vitamin D Total-25 Hydroxy\n" +
-                    "Lipid Profile"
+                    "Lipid Profile",
+//            "Complete Hemogram\n"+
+//                    "CRP (C Reactive Protien) Quantitative , Serum)\n"+
+//                    "Iron Studies\n"+
+//                    "Kidney Function Test\n"+
+//                    "Vitamin D Total-25 Hydroxy\n" +
+//                    "Lipid Profile"
+
     };
 
     HashMap<String,String> item;
@@ -56,9 +65,9 @@ public class labTestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lab_test);
 
-        btnGoToCart = findViewById(R.id.buttonLTGoToCart);
-        btnBack = findViewById(R.id.buttonLTBack);
-        listView = findViewById(R.id.listViewLT);
+        btnGoToCart = findViewById(R.id.buttonCartCheckout);
+        btnBack = findViewById(R.id.buttonCartBack);
+        listView = findViewById(R.id.listViewCart);
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,7 +107,12 @@ public class labTestActivity extends AppCompatActivity {
             }
         });
 
-
+        btnGoToCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(labTestActivity.this,CartLabActivity.class));
+            }
+        });
 
 
     }
