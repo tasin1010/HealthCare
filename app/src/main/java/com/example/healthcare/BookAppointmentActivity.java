@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +15,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -28,12 +31,12 @@ public class BookAppointmentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_appointment);
 
-        tv = findViewById(R.id.textViewAppTitle);
+        tv = findViewById(R.id.textViewLTBTTitle);
         ed1 = findViewById(R.id.editTextLTBFullName);
         ed2 = findViewById(R.id.editTextLTBAddress);
         ed3 = findViewById(R.id.editTextLTBContactNumber);
         ed4 = findViewById(R.id.editTextLTBPincode);
-        dateButton = findViewById(R.id.buttonCartDate);
+        dateButton = findViewById(R.id.buttonBMCartDate);
         timeButton = findViewById(R.id.buttonAppTime);
         btnBook = findViewById(R.id.buttonLTBBooking);
         btnBack = findViewById(R.id.buttonAppBack);
@@ -86,7 +89,20 @@ public class BookAppointmentActivity extends AppCompatActivity {
         btnBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Database db = new Database(getApplicationContext(),"healthcare",null,1);
 
+                SharedPreferences sharedPreferences = getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
+                String username = sharedPreferences.getString("username","").toString();
+
+                if(db.checkAppointmentExists(username,title+" => "+fullname,address,contact,dateButton.getText().toString(),timeButton.getText().toString())==1) {
+                    Toast.makeText(getApplicationContext(), "Appointment Already Exist", Toast.LENGTH_SHORT).show();
+                }else {
+                    db.addOrder(username,title+" => "+fullname,address,contact,0,dateButton.getText().toString(),timeButton.getText().toString(),Float.parseFloat(fees),"appointment");
+                    Toast.makeText(getApplicationContext(), "Your appointment is done successfully", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(BookAppointmentActivity.this,HomeActivity.class));
+                }
+                //db.addOrder(username,edname.getText().toString(),edaddress.getText().toString(),edcontact.getText().toString(),
+                  //      Integer.parseInt(edpincode.getText().toString()),date.toString(),"",Float.parseFloat(price[1].toString()),"medicine");
             }
         });
 

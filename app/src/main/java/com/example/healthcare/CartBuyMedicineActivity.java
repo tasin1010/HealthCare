@@ -15,13 +15,12 @@ import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
-public class CartLabActivity extends AppCompatActivity {
+public class CartBuyMedicineActivity extends AppCompatActivity {
 
     HashMap<String, String> item;
     ArrayList list;
@@ -36,10 +35,9 @@ public class CartLabActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cart_lab);
+        setContentView(R.layout.activity_cart_buy_medicine);
 
         dateButton = findViewById(R.id.buttonBMCartDate);
-        timeButton = findViewById(R.id.buttonCartTIme);
         btnCheckout = findViewById(R.id.buttonBMCCartCheckout);
         btnBack = findViewById(R.id.buttonBMCartBack);
         tvTotal = findViewById(R.id.textViewBMCartTotalCost);
@@ -51,7 +49,7 @@ public class CartLabActivity extends AppCompatActivity {
         Database db = new Database(getApplicationContext(),"healthcare",null,1);
 
         float totalAmount = 0;
-        ArrayList dbData = db.getCartData(username,"lab");
+        ArrayList dbData = db.getCartData(username,"medicine");
 
         //Toast.makeText(getApplicationContext(), ""+dbData, Toast.LENGTH_SHORT).show();
 
@@ -93,20 +91,19 @@ public class CartLabActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(CartLabActivity.this,labTestActivity.class));
+                startActivity(new Intent(CartBuyMedicineActivity.this,BuyMedicineActivity.class));
             }
         });
 
         btnCheckout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent it = new Intent(CartLabActivity.this,LabTestBookActivity.class);
-                        it.putExtra("price",tvTotal.getText());
-                        it.putExtra("date",dateButton.getText());
-                        it.putExtra("time",timeButton.getText());
-                        startActivity(it);
-                    }
-                });
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(CartBuyMedicineActivity.this,BuyMedicineBookActivity.class);
+                it.putExtra("price",tvTotal.getText());
+                it.putExtra("date",dateButton.getText());
+                startActivity(it);
+            }
+        });
 
         //datePicker
         initDatePicker();
@@ -118,19 +115,9 @@ public class CartLabActivity extends AppCompatActivity {
             }
         });
 
-        //timePicker
-        initTimePicker();
-
-        timeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                timePickerDialog.show();
-            }
-        });
 
 
     }
-
 
     private void initDatePicker() {
         DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
@@ -150,23 +137,4 @@ public class CartLabActivity extends AppCompatActivity {
         datePickerDialog = new DatePickerDialog(this,style,dateSetListener,year,month,day);
         datePickerDialog.getDatePicker().setMinDate(cal.getTimeInMillis()+86400000);
     }
-
-    private void initTimePicker() {
-        TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                timeButton.setText(hourOfDay+":"+minute);
-            }
-        };
-
-        Calendar cal = Calendar.getInstance();
-        int hrs = cal.get(Calendar.HOUR);
-        int mins = cal.get(Calendar.MINUTE);
-
-        int style = AlertDialog.THEME_HOLO_DARK;
-        timePickerDialog = new TimePickerDialog(this,style,timeSetListener,hrs,mins,true);
-
-    }
-
-
 }
